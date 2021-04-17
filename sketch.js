@@ -1,27 +1,36 @@
-var car,wall;
-var speed,weight;
-function setup() {
-  createCanvas(1600,400);
-  speed=random(55,90);
-  weight=random(400,1500);
-  wall=createSprite(1500,200,60,height/2);
-  wall.shapeColor=(80,80,80);
-  car=createSprite(50, 200, 50, 50);
-  car.velocityX=speed;
+const Engine = Matter.Engine;
+const World= Matter.World;
+const Bodies = Matter.Bodies;
+
+var engine, world;
+var ground, ball;
+
+function setup(){
+    var canvas = createCanvas(400,400);
+    engine = Engine.create();
+    world = engine.world;
+
+    var ground_options ={
+        isStatic: true
+    }
+    var ball_options ={
+        restitution: 2
+    }
+
+   ground= Bodies.rectangle(200,390,width,20,ground_options);
+   ball= Bodies.rectangle(200,200,40,40,ball_options)
+    World.add(world,ground);
+    World.add(world,ball);
+
+
+
+
 }
 
-function draw() {
-  background(255,255,255);
-  var deformation= 0.5*weight*speed*speed/22500; 
-  if (wall.x-car.x<wall.width/2+car.width/2) {
-    car.velocityX=0;
-    if (deformation<100) {
-        car.shapeColor=rgb(0,255,0,);
-    } else if (deformation>100&&deformation<180) {
-        car.shapeColor=rgb(255,255,0);
-    } else if (deformation>180) {
-        car.shapeColor=rgb(255,0,0);
-    }
-  }
-  drawSprites();
+function draw(){
+    background(0);
+    Engine.update(engine);
+    rectMode(CENTER);
+    rect(ground.position.x,ground.position.y,width,50);
+    rect(ball.position.x,ball.position.y,40,40);
 }
